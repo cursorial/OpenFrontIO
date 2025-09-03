@@ -6,6 +6,7 @@ import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
 import { Layer } from "./Layer";
 import { PauseGameEvent } from "../../Transport";
+import { ShowExitConfirmModalEvent } from "./ExitConfirmModal";
 import { ShowReplayPanelEvent } from "./ReplayPanel";
 import { ShowSettingsModalEvent } from "./SettingsModal";
 import exitIcon from "../../../../resources/images/ExitIconWhite.svg";
@@ -14,7 +15,6 @@ import playIcon from "../../../../resources/images/PlayIconWhite.svg";
 import replayRegularIcon from "../../../../resources/images/ReplayRegularIconWhite.svg";
 import replaySolidIcon from "../../../../resources/images/ReplaySolidIconWhite.svg";
 import settingsIcon from "../../../../resources/images/SettingIconWhite.svg";
-import { translateText } from "../../Utils";
 
 @customElement("game-right-sidebar")
 export class GameRightSidebar extends LitElement implements Layer {
@@ -86,13 +86,11 @@ export class GameRightSidebar extends LitElement implements Layer {
     this.eventBus?.emit(new PauseGameEvent(this.isPaused));
   }
 
-  private onExitButtonClick() {
+  private async onExitButtonClick() {
     const isAlive = this.game?.myPlayer()?.isAlive();
     if (isAlive) {
-      const isConfirmed = confirm(
-        translateText("help_modal.exit_confirmation"),
-      );
-      if (!isConfirmed) return;
+      this.eventBus?.emit(new ShowExitConfirmModalEvent());
+      return;
     }
     // redirect to the home page
     window.location.href = "/";

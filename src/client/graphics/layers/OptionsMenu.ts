@@ -7,8 +7,8 @@ import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
 import { Layer } from "./Layer";
 import { PauseGameEvent } from "../../Transport";
+import { ShowExitConfirmModalEvent } from "./ExitConfirmModal";
 import { UserSettings } from "../../../core/game/UserSettings";
-import { translateText } from "../../Utils";
 
 const button = ({
   classes = "",
@@ -72,13 +72,11 @@ export class OptionsMenu extends LitElement implements Layer {
     this.requestUpdate();
   }
 
-  private onExitButtonClick() {
+  private async onExitButtonClick() {
     const isAlive = this.game?.myPlayer()?.isAlive();
     if (isAlive) {
-      const isConfirmed = confirm(
-        translateText("help_modal.exit_confirmation"),
-      );
-      if (!isConfirmed) return;
+      this.eventBus?.emit(new ShowExitConfirmModalEvent());
+      return;
     }
     // redirect to the home page
     window.location.href = "/";

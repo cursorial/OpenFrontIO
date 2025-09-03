@@ -6,6 +6,7 @@ import { ControlPanel } from "./layers/ControlPanel";
 import { EmojiTable } from "./layers/EmojiTable";
 import { EventBus } from "../../core/EventBus";
 import { EventsDisplay } from "./layers/EventsDisplay";
+import { ExitConfirmModal } from "./layers/ExitConfirmModal";
 import { FPSDisplay } from "./layers/FPSDisplay";
 import { FxLayer } from "./layers/FxLayer";
 import { GameLeftSidebar } from "./layers/GameLeftSidebar";
@@ -133,6 +134,12 @@ export function createRenderer(
   }
   winModal.eventBus = eventBus;
   winModal.game = game;
+
+  const exitConfirmModal = document.querySelector("exit-confirm-modal") as ExitConfirmModal;
+  if (!(exitConfirmModal instanceof ExitConfirmModal)) {
+    console.error("exit confirm modal not found");
+  }
+  exitConfirmModal.initEventBus(eventBus);
 
   const replayPanel = document.querySelector("replay-panel") as ReplayPanel;
   if (!(replayPanel instanceof ReplayPanel)) {
